@@ -146,8 +146,8 @@ class Py3CW(IPy3CW):
 
         api = API_METHODS[entity][action]
         method, api_path = api
-        api_path = api_path.replace('{id}', action_id or '')
-        api_path = api_path.replace('{sub_id}', action_sub_id or '')
+        api_path = api_path.replace('{id}', f'{action_id}' or '')
+        api_path = api_path.replace('{sub_id}', f'{action_sub_id}' or '')
         is_get_with_payload = method == 'GET' and payload is not None
 
         return self.__make_request(
