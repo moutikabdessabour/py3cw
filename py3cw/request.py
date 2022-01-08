@@ -8,7 +8,7 @@ from requests.exceptions import HTTPError
 from urllib.parse import urlencode, quote_plus
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
-
+import time
 
 class IPy3CW:
     def request(self, entity: str, action: str = '', action_id: str = None, payload: any = None):
@@ -105,7 +105,15 @@ class Py3CW(IPy3CW):
                 json=payload,
                 timeout=(self.request_timeout, self.request_timeout)
             )
-
+            if response.status_code == 429:
+                time.sleep(self.request_timeout)
+                self.__make_request(
+                        http_method=http_method,
+                        path=path,
+                        params=params,
+                        payload=payload,
+                        retry_count=retry_count
+                    )
             response_json = json.loads(response.text)
 
             if type(response_json) is dict and 'error' in response_json:
