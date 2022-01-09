@@ -33,6 +33,7 @@ class Py3CW(IPy3CW):
         self.key = key
         self.secret = secret
         self.request_timeout = request_options.get('request_timeout', 30)
+        self.api_limit_timeout = request_options.get('api_limit_timeout', 5)
         self.request_retries_count = request_options.get('nr_of_retries', 5)
         self.request_retry_status_codes = request_options.get('retry_status_codes', [500, 502, 503, 504])
 
@@ -105,9 +106,11 @@ class Py3CW(IPy3CW):
                 json=payload,
                 timeout=(self.request_timeout, self.request_timeout)
             )
-            print(f"Response Status Code : {response.status_code}")
+            """
+            Handling 3commas response when we hit the API limit
+            """
             if response.status_code == 429:
-                time.sleep(self.request_timeout)
+                time.sleep(self.api_limit_timeout)
                 return self.__make_request(
                         http_method=http_method,
                         path=path,
