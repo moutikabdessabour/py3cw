@@ -107,7 +107,7 @@ class Py3CW(IPy3CW):
             )
             if response.status_code == 429:
                 time.sleep(self.request_timeout)
-                self.__make_request(
+                return self.__make_request(
                         http_method=http_method,
                         path=path,
                         params=params,
