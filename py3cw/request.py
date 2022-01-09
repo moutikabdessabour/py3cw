@@ -105,7 +105,6 @@ class Py3CW(IPy3CW):
                 json=payload,
                 timeout=(self.request_timeout, self.request_timeout)
             )
-            print(f"Response Status Code : {response.status_code}")
             if response.status_code == 429:
                 time.sleep(self.request_timeout)
                 return self.__make_request(
@@ -113,6 +112,7 @@ class Py3CW(IPy3CW):
                         path=path,
                         params=params,
                         payload=payload,
+                        additional_headers=additional_headers,
                         retry_count=retry_count
                     )
             response_json = json.loads(response.text)
